@@ -9,7 +9,9 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "android-build-debug": "ionic capacitor copy android && cd android && ./gradlew assemble && cd .. && mkdir -p builds && cp android/app/build/outputs/apk/debug/app-debug.apk builds/airchek-ionic-debug-`npm run version --silent`.apk",
+    "android-build-release": "ionic capacitor copy android && cd android && ./gradlew assembleRelease && cd .. && mkdir -p builds && cp android/app/build/outputs/apk/release/app-release.apk builds/airchek-ionic-release-`npm run version --silent`.apk"
   },
   "private": true,
   "dependencies": {
@@ -19,11 +21,15 @@
     "@angular/platform-browser": "~10.0.0",
     "@angular/platform-browser-dynamic": "~10.0.0",
     "@angular/router": "~10.0.0",
+    "@capacitor/android": "^2.4.2",
     "@capacitor/core": "2.4.2",
     "@ionic-native/core": "^5.0.0",
+    "@ionic-native/geolocation": "^5.28.0",
     "@ionic-native/splash-screen": "^5.0.0",
     "@ionic-native/status-bar": "^5.0.0",
     "@ionic/angular": "^5.0.0",
+    "cordova-plugin-geolocation": "^4.0.2",
+    "leaflet": "^1.7.1",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"
@@ -38,6 +44,7 @@
     "@ionic/angular-toolkit": "^2.3.0",
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",
+    "@types/leaflet": "^1.5.17",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",
     "jasmine-core": "~3.5.0",

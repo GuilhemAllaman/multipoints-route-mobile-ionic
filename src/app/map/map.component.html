@@ -1,0 +1,46 @@
+<ion-content [fullscreen]="true">
+
+  <div id="map"></div>
+
+  <ion-fab horizontal="end" vertical="top" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="locate-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="play-forward-circle-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>
+
+<ion-footer class="ion-no-border">
+
+  <ion-tab-bar>
+
+    <ion-tab-button tab="map">
+      <ion-icon name="map-outline"></ion-icon>
+      <ion-label>Map</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="schedule">
+      <ion-icon name="list-outline"></ion-icon>
+      <ion-label>Points</ion-label>
+      <ion-badge>X</ion-badge>
+    </ion-tab-button>
+
+    <ion-tab-button tab="speakers">
+      <ion-icon name="settings-outline"></ion-icon>
+      <ion-label>Settings</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="about">
+      <ion-icon name="information-circle-outline"></ion-icon>
+      <ion-label>About</ion-label>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+</ion-footer>
+
