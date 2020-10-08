@@ -23,7 +23,7 @@ export class MapComponent implements OnInit {
 
     // geolocation
     this.geolocation.watchPosition().subscribe(data => {
-      this.map.setView([data.coords.latitude, data.coords.longitude], this.map.getZoom());
+      this.map.setView([(data as any).coords.latitude, (data as any).coords.longitude], this.map.getZoom());
     });
   }
 }

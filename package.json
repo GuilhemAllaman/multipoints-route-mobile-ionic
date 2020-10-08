@@ -1,8 +1,8 @@
 {
-  "name": "multipoints-route-mobile-ionic",
+  "name": "multipoints-route-ionic",
   "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "author": "Guilhem Allaman",
+  "homepage": "https://github.com/GuilhemAllaman/multipoints-route-mobile-ionic",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -10,8 +10,9 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "android-build-debug": "ionic capacitor copy android && cd android && ./gradlew assemble && cd .. && mkdir -p builds && cp android/app/build/outputs/apk/debug/app-debug.apk builds/airchek-ionic-debug-`npm run version --silent`.apk",
-    "android-build-release": "ionic capacitor copy android && cd android && ./gradlew assembleRelease && cd .. && mkdir -p builds && cp android/app/build/outputs/apk/release/app-release.apk builds/airchek-ionic-release-`npm run version --silent`.apk"
+    "version": "./node_modules/project-version/cli.js",
+    "android-build-debug": "ionic capacitor copy android && cd android && ./gradlew assemble && cd .. && mkdir -p builds && cp android/app/build/outputs/apk/debug/app-debug.apk builds/mpr-debug-`npm run version --silent`.apk",
+    "android-build-release": "ionic capacitor copy android && cd android && ./gradlew assembleRelease && cd .. && mkdir -p builds && cp android/app/build/outputs/apk/release/app-release.apk builds/mpr-release-`npm run version --silent`.apk"
   },
   "private": true,
   "dependencies": {
@@ -30,6 +31,7 @@
     "@ionic/angular": "^5.0.0",
     "cordova-plugin-geolocation": "^4.0.2",
     "leaflet": "^1.7.1",
+    "project-version": "^2.0.0",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"
