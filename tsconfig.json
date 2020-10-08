@@ -14,7 +14,15 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "resolveJsonModule": true,
+    "paths": {
+      "@root/*": ["./*"],
+      "@app/*": ["./src/app/*"],
+      "@env/*": ["./src/environments/*"],
+      "@core/*": ["./src/app/core/*"]
+    }
+
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

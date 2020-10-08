@@ -1,17 +1,16 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { MapComponent } from './map/map.component';
 
 const routes: Routes = [
   {
     path: 'map',
-    component: MapComponent
+    loadChildren: () => import('./map/map.module').then( m => m.MapPageModule)
   },
   {
     path: '',
     redirectTo: 'map',
     pathMatch: 'full'
-  },
+  }
 ];
 
 @NgModule({
