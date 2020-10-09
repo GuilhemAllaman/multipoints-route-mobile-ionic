@@ -4,6 +4,7 @@ import { LngLat, Map, Marker } from 'mapbox-gl';
 import { Point } from '@core/point.model';
 import { environment } from '@env/environment';
 import { ApiService } from '@core/api.service';
+import { ToastController } from '@root/node_modules/@ionic/angular';
 
 @Component({
   selector: 'app-map',
@@ -17,9 +18,12 @@ export class MapPage implements OnInit {
 
   points: Array<Point> = [];
   markers: Array<Marker> = [];
+  routeSourceIds: Array<string> = [];
+  routeLayerIds: Array<string> = [];
 
   constructor(
       public geolocation: Geolocation,
+      public toastController: ToastController,
       public apiService: ApiService
   ) { }
 
@@ -34,10 +38,11 @@ export class MapPage implements OnInit {
       center: [2.34057, 48.86000],
       attributionControl: false
     });
-    this.map.on('dblclick', event => this.addPoint(new Point(event.lngLat.lng, event.lngLat.lat)));
-    this.map.on('load', () => {
-      this.map.resize();
-    });
+    this.map.dragRotate.disable();
+    this.map.touchZoomRotate.disable();
+    this.map.on('click', event => this.onMapClick(event));
+    this.map.on('dblclick', event => event.preventDefault());
+    this.map.on('load', () => this.map.resize());
 
     // geolocation
     this.geolocation.watchPosition().subscribe(data => {
@@ -57,22 +62,78 @@ export class MapPage implements OnInit {
     }
   }
 
+  private onMapClick(event): void {
+    const point = new Point(event.lngLat.lng, event.lngLat.lat);
+    // check if last added point is the same (to avoid double click
+    if (this.points.length === 0){
+      this.addPoint(point);
+    } else {
+      const last = this.points[this.points.length - 1];
+      if (last.x !== point.x || last.y !== point.y){
+        this.addPoint(point);
+      }
+    }
+  }
+
   private addPoint(point: Point): void {
     this.points.push(point);
     this.markers.push(new Marker().setLngLat([point.x, point.y]).addTo(this.map));
   }
 
-  public clearPoints(): void {
+  public removeLast(): void {
+    if (this.points.length > 0){
+      this.points.pop();
+      this.markers.pop().remove();
+    }
+  }
+
+  public clearElements(): void {
     this.points = [];
     this.markers.forEach(m => m.remove());
     this.markers = [];
+    this.routeLayerIds.forEach(id => this.map.removeLayer(id));
+    this.routeLayerIds = [];
+    this.routeSourceIds.forEach(id => this.map.removeSource(id));
+    this.routeSourceIds = [];
   }
 
-  public computeRoute(): void {
+  public async computeRoute() {
     if (this.points.length < 2){
-      console.log('You must specify at least 2 points');
+      const toast = await this.toastController.create({
+        message: 'You must specify at least 2 points',
+        duration: 1500
+      });
+      toast.present();
       return;
     }
-    this.apiService.computeRoute('cycling', this.points).subscribe(route => console.log(route));
+    this.apiService.computeRoute('cycling', this.points)
+        .subscribe(route => {
+
+          const now = new Date().valueOf();
+          const sourceId = now + '-source';
+          const layerId = now + '-layer';
+
+          this.map.addSource(sourceId, {
+            type: 'geojson',
+            data: route.toGeojson()
+          });
+          this.routeSourceIds.push(sourceId);
+
+
+          this.map.addLayer({
+            id: layerId,
+            type: 'line',
+            source: sourceId,
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round'
+            },
+            paint: {
+              'line-color': '#1972bf',
+              'line-width': 5
+            }
+          });
+          this.routeLayerIds.push(layerId);
+        });
   }
 }

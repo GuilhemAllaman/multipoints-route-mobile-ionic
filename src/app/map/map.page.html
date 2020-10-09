@@ -2,21 +2,15 @@
 
   <div id="map"></div>
 
-  <ion-fab horizontal="end" vertical="top" slot="fixed">
-    <ion-fab-button (click)="this.trackPosition()">
-      <ion-icon name="locate-outline"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-
   <ion-fab horizontal="start" vertical="bottom" slot="fixed">
-    <ion-fab-button (click)="this.clearPoints()">
-      <ion-icon name="trash-outline"></ion-icon>
+    <ion-fab-button color="light" (click)="this.removeLast()">
+      <ion-icon name="return-down-back-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
   <ion-fab horizontal="end" vertical="bottom" slot="fixed">
-    <ion-fab-button (click)="this.computeRoute()">
-      <ion-icon name="play-forward-circle-outline"></ion-icon>
+    <ion-fab-button color="light" (click)="this.trackPosition()">
+      <ion-icon name="locate-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
@@ -26,25 +20,25 @@
 
   <ion-tab-bar>
 
-    <ion-tab-button tab="map">
-      <ion-icon name="map-outline"></ion-icon>
-      <ion-label>Map</ion-label>
-    </ion-tab-button>
-
-    <ion-tab-button tab="schedule">
+    <ion-tab-button tab="points">
       <ion-icon name="list-outline"></ion-icon>
       <ion-label>Points</ion-label>
       <ion-badge>{{this.points.length}}</ion-badge>
     </ion-tab-button>
 
-    <ion-tab-button tab="speakers">
+    <ion-tab-button tab="trash" (click)="this.clearElements()">
+      <ion-icon name="trash-outline" color="danger"></ion-icon>
+      <ion-label>Clear</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="settings">
       <ion-icon name="settings-outline"></ion-icon>
       <ion-label>Settings</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="about">
-      <ion-icon name="information-circle-outline"></ion-icon>
-      <ion-label>About</ion-label>
+    <ion-tab-button tab="compute" (click)="this.computeRoute()">
+      <ion-icon name="arrow-forward-circle-outline" color="success"></ion-icon>
+      <ion-label>Go</ion-label>
     </ion-tab-button>
 
   </ion-tab-bar>
