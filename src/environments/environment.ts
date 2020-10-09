@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   api: {
-    url: 'http://localhost:5000'
+    // url: 'http://localhost:5000'
+    url: 'https://mpr.guilhemallaman.net'
   },
   mapbox: {
     accessToken: 'pk.eyJ1IjoiZ2Etc2ltdXRlY2giLCJhIjoiY2tia2ppb3F3MHpnaTJybHNneW93ZTV2NyJ9.ScyeFQiAHmpFVHsG1CX3ug',
