@@ -39,7 +39,6 @@ export class MapPage implements OnInit {
       attributionControl: false
     });
     this.map.dragRotate.disable();
-    this.map.touchZoomRotate.disable();
     this.map.on('click', event => this.onMapClick(event));
     this.map.on('dblclick', event => event.preventDefault());
     this.map.on('load', () => this.map.resize());
