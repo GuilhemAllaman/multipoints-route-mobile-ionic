@@ -56,6 +56,8 @@ export class MapPage implements OnInit {
     if (this.lastLocation) {
       this.map.flyTo({
         center: [this.lastLocation.lng, this.lastLocation.lat],
+        zoom: 16,
+        minZoom: 15,
         duration: 2000
       });
     }
