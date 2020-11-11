@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Geolocation } from '@ionic-native/geolocation/ngx';
-import { LngLat, Map, Marker } from 'mapbox-gl';
+import { GeolocateControl, LngLat, Map, Marker } from 'mapbox-gl';
 import { Point } from '@core/point.model';
 import { environment } from '@env/environment';
 import { ApiService } from '@core/api.service';
@@ -22,7 +21,6 @@ export class MapPage implements OnInit {
   routeLayerIds: Array<string> = [];
 
   constructor(
-      public geolocation: Geolocation,
       public toastController: ToastController,
       public apiService: ApiService
   ) { }
@@ -36,31 +34,29 @@ export class MapPage implements OnInit {
       style: environment.mapbox.style,
       zoom: 10,
       center: [2.34057, 48.86000],
-      attributionControl: false
+      attributionControl: false,
+      dragRotate: false
     });
-    this.map.dragRotate.disable();
+
+    // this.map.dragRotate.disable();
     this.map.on('click', event => this.onMapClick(event));
     this.map.on('dblclick', event => event.preventDefault());
-    this.map.on('load', () => this.map.resize());
 
-    // geolocation
-    this.geolocation.watchPosition().subscribe(data => {
-      if ((data as any).coords) {
-        const coords = (data as any).coords;
-        this.lastLocation = new LngLat(coords.longitude, coords.latitude);
-      }
+
+    // geolocation control
+    const geolocateControl = new GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true
+      },
+      trackUserLocation: true
     });
-  }
+    this.map.addControl(geolocateControl);
+    geolocateControl.on('geolocate', data => this.lastLocation = new LngLat(data.coords.longitude, data.coords.latitude));
 
-  public trackPosition(): void {
-    if (this.lastLocation) {
-      this.map.flyTo({
-        center: [this.lastLocation.lng, this.lastLocation.lat],
-        zoom: 16,
-        minZoom: 15,
-        duration: 2000
-      });
-    }
+    this.map.on('load', () => {
+      this.map.resize();
+      geolocateControl.trigger();
+    });
   }
 
   private onMapClick(event): void {
