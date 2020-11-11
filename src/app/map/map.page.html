@@ -2,15 +2,21 @@
 
   <div id="map"></div>
 
-  <ion-fab horizontal="start" vertical="bottom" slot="fixed">
-    <ion-fab-button color="light" (click)="this.removeLast()">
+  <ion-fab *ngIf="this.editMode" horizontal="start" vertical="bottom" slot="fixed">
+    <ion-fab-button size="small" color="danger" (click)="this.removeLast()">
       <ion-icon name="return-down-back-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
-  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
-    <ion-fab-button color="light">
-      <ion-icon name="locate-outline"></ion-icon>
+  <ion-fab *ngIf="this.editMode" horizontal="end" vertical="bottom" slot="fixed">
+    <ion-fab-button color="success" (click)="this.setEditMode(false)">
+      <ion-icon name="checkmark-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-fab *ngIf="!this.editMode" horizontal="end" vertical="bottom" slot="fixed">
+    <ion-fab-button color="primary" (click)="this.setEditMode(true)">
+      <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 

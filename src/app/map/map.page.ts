@@ -14,6 +14,7 @@ export class MapPage implements OnInit {
 
   map: Map;
   lastLocation: LngLat;
+  editMode: boolean;
 
   points: Array<Point> = [];
   markers: Array<Marker> = [];
@@ -40,7 +41,7 @@ export class MapPage implements OnInit {
 
     // this.map.dragRotate.disable();
     this.map.on('click', event => this.onMapClick(event));
-    this.map.on('dblclick', event => event.preventDefault());
+    this.map.on('dblclick', event => this.onMapDoubleClick(event));
 
 
     // geolocation control
@@ -59,7 +60,22 @@ export class MapPage implements OnInit {
     });
   }
 
+  public setEditMode(edit: boolean): void {
+    this.editMode = edit;
+  }
+
+  private onMapDoubleClick(event): void {
+    console.log('MAP DBL CLICK');
+    if (this.editMode){
+      event.preventDefault();
+    }
+  }
+
   private onMapClick(event): void {
+    console.log('MAP CLICK');
+    if (!this.editMode){
+      return;
+    }
     const point = new Point(event.lngLat.lng, event.lngLat.lat);
     // check if last added point is the same (to avoid double click
     if (this.points.length === 0){
@@ -131,6 +147,7 @@ export class MapPage implements OnInit {
             }
           });
           this.routeLayerIds.push(layerId);
+          this.setEditMode(false);
         });
   }
 }
