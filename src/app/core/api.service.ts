@@ -21,6 +21,7 @@ export class ApiService {
   }
 
   public computeRoute(mode: string, points: Array<Point>): Observable<Route> {
+    console.log('Asking for route with transport mode: ', mode);
     const payload = {points: points.map(p => [p.x, p.y])};
     return this.http.post<any>(this.buildUrl('/route/' + mode), payload)
         .pipe(map(data => Route.fromJson(data.route)));

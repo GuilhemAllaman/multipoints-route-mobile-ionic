@@ -3,7 +3,7 @@ import { GeolocateControl, LngLat, Map, Marker } from 'mapbox-gl';
 import { Point } from '@core/point.model';
 import { environment } from '@env/environment';
 import { ApiService } from '@core/api.service';
-import { ToastController } from '@root/node_modules/@ionic/angular';
+import { ModalController, ToastController } from '@root/node_modules/@ionic/angular';
 
 @Component({
   selector: 'app-map',
@@ -15,16 +15,22 @@ export class MapPage implements OnInit {
   map: Map;
   lastLocation: LngLat;
   editMode: boolean;
+  transportMode: string;
 
   points: Array<Point> = [];
   markers: Array<Marker> = [];
   routeSourceIds: Array<string> = [];
   routeLayerIds: Array<string> = [];
 
+  private static readonly TRANSPORT_MODE_STORAGE_KEY = 'mpr.transport_mode';
+
   constructor(
       public toastController: ToastController,
+      public modalController: ModalController,
       public apiService: ApiService
-  ) { }
+  ) {
+    this.transportMode = this.getSavedTransportMode();
+  }
 
   ngOnInit() {
 
@@ -110,16 +116,25 @@ export class MapPage implements OnInit {
     this.routeSourceIds = [];
   }
 
-  public async computeRoute() {
+  public transportModeChanged(transportMode: string): void {
+    this.transportMode = transportMode;
+    localStorage.setItem(MapPage.TRANSPORT_MODE_STORAGE_KEY, transportMode);
+  }
+
+  public getSavedTransportMode(): string {
+    const saved = localStorage.getItem(MapPage.TRANSPORT_MODE_STORAGE_KEY);
+    return saved ? saved : 'cycling';
+  }
+
+  public async computeRoute(): Promise<void> {
     if (this.points.length < 2){
       const toast = await this.toastController.create({
         message: 'You must specify at least 2 points',
         duration: 1500
       });
-      toast.present();
-      return;
+      return await toast.present();
     }
-    this.apiService.computeRoute('cycling', this.points)
+    this.apiService.computeRoute(this.transportMode, this.points)
         .subscribe(route => {
 
           const now = new Date().valueOf();

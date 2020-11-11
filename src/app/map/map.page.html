@@ -1,3 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-segment (ionChange)="this.transportModeChanged($event.detail.value)" value="{{this.transportMode}}">
+      <ion-segment-button value="cycling">
+        <ion-icon name="bicycle"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="driving">
+        <ion-icon name="car"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="walking">
+        <ion-icon name="walk"></ion-icon>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content fullscreen>
 
   <div id="map"></div>
@@ -36,10 +52,12 @@
       <ion-label>Clear</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="settings">
+    <!--
+    <ion-tab-button tab="settings" (click)="this.editSettings()">
       <ion-icon name="settings-outline"></ion-icon>
       <ion-label>Settings</ion-label>
     </ion-tab-button>
+    -->
 
     <ion-tab-button tab="compute" (click)="this.computeRoute()">
       <ion-icon name="arrow-forward-circle-outline" color="success"></ion-icon>
