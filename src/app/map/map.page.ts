@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { GeolocateControl, LngLat, Map, Marker } from 'mapbox-gl';
+import { Component } from '@angular/core';
+import { GeolocateControl, LngLat, Map, Marker, NavigationControl } from 'mapbox-gl';
 import { Point } from '@core/point.model';
 import { environment } from '@env/environment';
 import { ApiService } from '@core/api.service';
-import { ModalController, ToastController } from '@root/node_modules/@ionic/angular';
+import { ModalController, Platform, ToastController } from '@root/node_modules/@ionic/angular';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.page.html',
   styleUrls: ['./map.page.scss'],
 })
-export class MapPage implements OnInit {
+export class MapPage {
 
   map: Map;
   lastLocation: LngLat;
@@ -25,14 +25,16 @@ export class MapPage implements OnInit {
   private static readonly TRANSPORT_MODE_STORAGE_KEY = 'mpr.transport_mode';
 
   constructor(
+      public platform: Platform,
       public toastController: ToastController,
       public modalController: ModalController,
       public apiService: ApiService
   ) {
     this.transportMode = this.getSavedTransportMode();
+    this.platform.ready().then(() => setTimeout(() => this.initMap()));
   }
 
-  ngOnInit() {
+  initMap() {
 
     // mapbox-gl map
     this.map = new Map({
@@ -45,11 +47,6 @@ export class MapPage implements OnInit {
       dragRotate: false
     });
 
-    // this.map.dragRotate.disable();
-    this.map.on('click', event => this.onMapClick(event));
-    this.map.on('dblclick', event => this.onMapDoubleClick(event));
-
-
     // geolocation control
     const geolocateControl = new GeolocateControl({
       positionOptions: {
@@ -57,13 +54,13 @@ export class MapPage implements OnInit {
       },
       trackUserLocation: true
     });
+    this.map.addControl(new NavigationControl());
     this.map.addControl(geolocateControl);
     geolocateControl.on('geolocate', data => this.lastLocation = new LngLat(data.coords.longitude, data.coords.latitude));
 
-    this.map.on('load', () => {
-      this.map.resize();
-      geolocateControl.trigger();
-    });
+    this.map.on('click', event => this.onMapClick(event));
+    this.map.on('dblclick', event => this.onMapDoubleClick(event));
+    this.map.on('load', () => geolocateControl.trigger());
   }
 
   public setEditMode(edit: boolean): void {
